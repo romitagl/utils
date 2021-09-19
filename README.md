@@ -1,2 +1,3 @@
-# utils
+# Utils
+
 Collection of SW utilities
