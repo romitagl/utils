@@ -15,7 +15,7 @@ apt-get update \
     && apt-get install -y docker-ce=$(apt-cache madison docker-ce | grep 20.10 | head -1 | awk '{print $3}')
 
 # Update /etc/hosts about other hosts
-cat <<EOF | sudo tee /etc/docker/daemon.json
+cat <<EOF | tee /etc/docker/daemon.json
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
@@ -26,9 +26,9 @@ cat <<EOF | sudo tee /etc/docker/daemon.json
 }
 EOF
 
-sudo systemctl enable docker
-sudo systemctl daemon-reload
-sudo systemctl restart docker
+systemctl enable docker
+systemctl daemon-reload
+systemctl restart docker
 
 # Failed to run kubelet" err="failed to run Kubelet: misconfiguration: kubelet cgroup driver: \"systemd\" is different from docker cgroup driver: \"cgroupfs\"
 # cat /var/lib/kubelet/kubeadm-flags.env
