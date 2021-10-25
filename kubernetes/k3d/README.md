@@ -6,8 +6,6 @@ k3d is a lightweight wrapper to run k3s (Rancher Lab’s minimal Kubernetes dist
 
 ## K3D Binary
 
-Running K3d (K3s in Docker) and docker-compose: <https://rancher.com/docs/k3s/latest/en/advanced/#running-k3d-k3s-in-docker-and-docker-compose>.
-
 There are a number of options to install latest release.
 
 ### MacOS install
@@ -89,6 +87,8 @@ k3d cluster delete test-cluster
 ```
 
 ## K3S Docker-Compose
+
+Running K3d (K3s in Docker) and docker-compose: <https://rancher.com/docs/k3s/latest/en/advanced/#running-k3d-k3s-in-docker-and-docker-compose>.
 
 [docker-compose.yml](https://github.com/k3s-io/k3s/blob/master/docker-compose.yml) is in the root of the K3s repo that serves as an example of how to run K3s from Docker. To run from docker-compose from this repo, run:
 
