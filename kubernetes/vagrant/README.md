@@ -28,7 +28,7 @@ Update the config settings in the [Vagrantfile](./Vagrantfile), in particular:
 
 - install-kubeadm: <https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/>
 
-**NOTE**: verify that steps *2* and *3* <https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker> are correctly automated by the script `./ubuntu/install-docker.sh`.
+**NOTE**: verify that steps *2* and *3* <https://kubernetes.io/docs/setup/production-environment/container-runtimes/#docker> are correctly automated by the script [./ubuntu/install-docker.sh](./ubuntu/install-docker.sh).
 
 ```bash
 sudo apt-get update
