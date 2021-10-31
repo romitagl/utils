@@ -29,7 +29,7 @@ sudo rm -f /usr/local/bin/k3d
 
 ### How to use
 
-Create a cluster named `test-cluster` with just a single server node:
+Create a cluster named `test-cluster`:
 
 ```bash
 # create a 1 node cluster
