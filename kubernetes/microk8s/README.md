@@ -1,0 +1,149 @@
+# Kubernetes cluster - Microk8s based
+
+The project depends on [Microk8s](https://microk8s.io), [GitHub](https://github.com/canonical/microk8s).
+
+MicroK8s is a low-ops, minimal production Kubernetes. MicroK8s is small, fast, single-package Kubernetes for developers, IoT and edge.
+
+MicroK8s is fully conformant Kubernetes.
+
+*It does not require Docker unlike k3d*.
+
+## Microk8s Binary
+
+There are a number of options to install latest release. [Get started](https://microk8s.io/docs/getting-started).
+
+### MacOS install
+
+It can be installed via the the [brew](https://brew.sh/) utility on MacOS:
+
+```bash
+brew install ubuntu/microk8s/microk8s
+```
+
+### Alternative install
+
+<https://microk8s.io/docs/getting-started> and <https://microk8s.io/docs/install-alternatives>
+
+## How to use
+
+MicroK8s includes a microk8s kubectl command.
+
+- [How To guides](https://microk8s.io/docs/how-to)
+- [Command Reference](https://microk8s.io/docs/command-reference)
+
+Create a cluster:
+
+```bash
+# install k8s 1.24 using a drive of max 10GB
+microk8s install --disk=10 --channel=1.24
+# check the status while Kubernetes starts
+microk8s status --wait-ready
+microk8s kubectl get nodes -o wide
+# list all resources
+microk8s kubectl get all --all-namespaces
+```
+
+Start and stop Kubernetes:
+
+```bash
+# start
+microk8s start
+# stop
+microk8s stop
+```
+
+Reset. This commands makes it easy to revert your MicroK8s to an ‘install fresh’ state wihout having to reinstall anything:
+
+```bash
+microk8s reset
+```
+
+Getting the cluster’s kubeconfig.
+
+```bash
+microk8s kubectl config view --raw > kubeconfig.yaml
+# verifiy that kubectl version is aligned with the cluster
+kubectl --kubeconfig kubeconfig.yaml get nodes
+kubectl --kubeconfig kubeconfig.yaml cluster-info
+# or
+export KUBECONFIG=kubeconfig.yaml
+kubectl get nodes
+```
+
+To delete the microk8s cluster:
+
+```bash
+microk8s uninstall
+```
+
+## Addons 
+
+Turn on the services you want:
+
+```bash
+microk8s status
+# community            # (core) The community addons repository
+# dashboard            # (core) The Kubernetes dashboard
+# dns                  # (core) CoreDNS
+# helm                 # (core) Helm 2 - the package manager for Kubernetes
+# helm3                # (core) Helm 3 - Kubernetes package manager
+# host-access          # (core) Allow Pods connecting to Host services smoothly
+# hostpath-storage     # (core) Storage class; allocates storage from host directory
+# ingress              # (core) Ingress controller for external access
+# mayastor             # (core) OpenEBS MayaStor
+# metallb              # (core) Loadbalancer for your Kubernetes cluster
+# metrics-server       # (core) K8s Metrics Server for API access to service metrics
+# prometheus           # (core) Prometheus operator for monitoring and logging
+# rbac                 # (core) Role-Based Access Control for authorisation
+# registry             # (core) Private image registry exposed on localhost:32000
+# storage              # (core) Alias to hostpath-storage add-on, deprecated
+microk8s enable dns prometheus ingress
+# microk8s disable command turns off a service.
+```
+
+### Ingress
+
+To enable an NGINX Ingress Controller: `microk8s enable ingress`. Official reference at <https://microk8s.io/docs/ingress>. Some additional resources also at <https://kubernetes.io/docs/concepts/services-networking/ingress/>, <https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/>.
+
+Check that ingress is working:
+
+```bash
+kubectl get all -n ingress
+```
+
+Please note that the ingress resource should be placed inside the same namespace of the backend resource.
+
+Create the ingress resource to expose Grafana, assuming that the `prometheus` service is enabled:
+
+```bash
+export NAMESPACE=monitoring
+cat <<EOF | kubectl apply -n $NAMESPACE -f -
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-grafana
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+EOF
+```
+
+**NOTE**: *If you host grafana under subpath* make sure your `grafana.ini` root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
+
+Get the node ip address:
+
+```bash
+kubectl get nodes -o wide
+# NAME          STATUS   ROLES    AGE     VERSION                    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
+# microk8s-vm   Ready    <none>   4h18m   v1.24.0-2+f76e51e86eadea   192.168.64.2   <none>        Ubuntu 18.04.6 LTS   4.15.0-177-generic   containerd://1.5.11
+```
+
+Open the browser and go to <http://192.168.64.2>. Login with username `admin` and password `admin`.
