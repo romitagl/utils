@@ -4,12 +4,14 @@ Collection of SW utilities.
 
 ## Folder structure
 
-```bash
-tree -d -L 2
+```text
 .
 └── kubernetes
-    ├── k3d
-    ├── kind
-    ├── microk8s
-    └── vagrant
+    ├── cluster-creation
+    │   ├── k3d
+    │   ├── kind
+    │   ├── microk8s
+    │   ├── minikube
+    │   └── vagrant-kubeadm
+    └── observability
 ```
