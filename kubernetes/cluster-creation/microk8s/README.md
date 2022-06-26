@@ -76,7 +76,7 @@ To delete the microk8s cluster:
 microk8s uninstall
 ```
 
-## Addons 
+## Addons
 
 Turn on the services you want:
 
@@ -147,3 +147,37 @@ kubectl get nodes -o wide
 ```
 
 Open the browser and go to <http://192.168.64.2>. Login with username `admin` and password `admin`.
+
+## SSH into cluster nodes
+
+It's possible to ssh into cluster nodes (VMs) using the following command:
+
+```bash
+# in the example the node name is microk8s-vm
+multipass shell microk8s-vm
+```
+
+### kube-apiserver
+
+Configuration available at: `/var/snap/microk8s/current/args/kube-apiserver`
+
+### kubelet
+
+Configuration available at: `/var/snap/microk8s/current/args/kubelet`
+
+### Logs
+
+To gather logs for the Kubernetes services you should be aware that all services are systemd services:
+
+snap.microk8s.daemon-cluster-agent
+snap.microk8s.daemon-containerd
+snap.microk8s.daemon-apiserver
+snap.microk8s.daemon-apiserver-kicker
+snap.microk8s.daemon-proxy
+snap.microk8s.daemon-kubelet
+snap.microk8s.daemon-scheduler
+snap.microk8s.daemon-controller-manager
+
+```bash
+sudo journalctl -u snap.microk8s.daemon-kubelet -r
+```

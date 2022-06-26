@@ -86,6 +86,26 @@ To delete the k3d cluster:
 k3d cluster delete test-cluster
 ```
 
+#### Embedded etcd
+
+Create a cluster with 3 server nodes using k3s’ embedded etcd database. The first server to be created will use the --cluster-init flag and k3d will wait for it to be up and running before creating (and connecting) the other server nodes.
+
+**NOTE**: Current setup tested with the Prometheus stack described under [observability/README.md](../../observability/README.md)
+
+```bash
+# expose NodePort range 30000-30002 on 127.0.0.1
+# do not install servicelb and traefik on all servers
+k3d cluster create test-cluster --k3s-arg "--no-deploy=servicelb@server:*" --k3s-arg "--no-deploy=traefik@server:*" --servers 3 \
+--api-port 127.0.0.1:6443 \
+-p 80:80@loadbalancer \
+-p 443:443@loadbalancer \
+-p "30000-30002:30000-30002"
+# to access to an exposed nginx service on port 30000
+curl 127.0.0.1:30000
+```
+
+Some additional config options at: <https://k3d.io/v5.4.1/usage/configfile/>
+
 ## K3S Docker-Compose
 
 Running K3d (K3s in Docker) and docker-compose: <https://rancher.com/docs/k3s/latest/en/advanced/#running-k3d-k3s-in-docker-and-docker-compose>.
