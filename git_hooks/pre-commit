@@ -7,9 +7,9 @@
 #
 # To enable this hook, rename this file to "pre-commit".
 
-# rebuild main README.md
 PROJECT_ROOT=$(git rev-parse --show-toplevel)
-cd "$PROJECT_ROOT"
+
+## -- generate main README.md --
 FOLDER_STRUCTURE=$(tree -d -L 3 --noreport)
 cat << EOF > "$PROJECT_ROOT/README.md"
 # Utils
@@ -21,21 +21,16 @@ Collection of SW utilities.
 \`\`\`text
 $FOLDER_STRUCTURE
 \`\`\`
-
-### Git hooks
-
-Configure git to use the new hook - it will stay with the repository:
-
-\`\`\`bash
-git config core.hooksPath "./git_hooks"
-\`\`\`
 EOF
+cat "$PROJECT_ROOT/README-TEMPLATE.md" >> "$PROJECT_ROOT/README.md"
 
 DIFF_README=$(git diff "$PROJECT_ROOT/README.md")
 if [[ "$DIFF_README" != "" ]]; then
 	echo "WARNING - add $PROJECT_ROOT/README.md and then commit again!"
 	exit 1
 fi
+
+## -- generate main README.md END --
 
 if git rev-parse --verify HEAD >/dev/null 2>&1
 then
