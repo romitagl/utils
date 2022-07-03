@@ -53,11 +53,12 @@ The [prometheus-community/kube-prometheus-stack](https://github.com/prometheus-c
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 # default install
-helm install [RELEASE_NAME] prometheus-community/kube-prometheus-stack
+RELEASE_NAME=prometheus
+helm install $RELEASE_NAME prometheus-community/kube-prometheus-stack
 # check values for eventual configuration
 helm show values prometheus-community/kube-prometheus-stack
 # install with custom values (create the myvalues.yaml file first)
-helm install -f myvalues.yaml [RELEASE_NAME] prometheus-community/kube-prometheus-stack
+helm install -f myvalues.yaml $RELEASE_NAME prometheus-community/kube-prometheus-stack
 # check its status by running:
 kubectl --namespace default get pods -l "release=prometheus"
 ```
