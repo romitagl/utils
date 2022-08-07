@@ -16,6 +16,7 @@ Collection of SW utilities.
     │   ├── microk8s
     │   ├── minikube
     │   └── vagrant-kubeadm
+    ├── kubectl-plugins
     └── observability
 ```
 
