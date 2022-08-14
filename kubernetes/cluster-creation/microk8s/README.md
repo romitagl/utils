@@ -68,6 +68,8 @@ kubectl --kubeconfig kubeconfig.yaml cluster-info
 # or
 export KUBECONFIG=kubeconfig.yaml
 kubectl get nodes
+# or (to override default kubectl config)
+microk8s kubectl config view --raw > ~/.kube/config
 ```
 
 To delete the microk8s cluster:

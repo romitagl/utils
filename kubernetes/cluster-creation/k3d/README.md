@@ -57,7 +57,6 @@ Getting the cluster’s kubeconfig (included in k3d cluster create).
 k3d kubeconfig get test-cluster > kubeconfig.yaml
 
 kubectl --kubeconfig kubeconfig.yaml get nodes
-
 kubectl --kubeconfig kubeconfig.yaml cluster-info
 ```
 

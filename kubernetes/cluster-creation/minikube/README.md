@@ -40,7 +40,6 @@ Getting the cluster’s kubeconfig.
 minikube kubectl config view > kubeconfig.yaml
 # or
 minikube update-context
-
 kubectl --kubeconfig kubeconfig.yaml get nodes
 kubectl --kubeconfig kubeconfig.yaml cluster-info
 ```
@@ -67,3 +66,7 @@ Browse the catalog of easily installed Kubernetes services:
 ```bash
 minikube addons list
 ```
+
+## Connecting to the nodes
+
+To connect to the cluster running in Docker: `docker exec -it minikube bash`
