@@ -7,17 +7,19 @@ Collection of SW utilities.
 ```text
 .
 ├── git_hooks
-└── kubernetes
-    ├── ci-cd
-    │   └── argocd
-    ├── cluster-creation
-    │   ├── k3d
-    │   ├── kind
-    │   ├── microk8s
-    │   ├── minikube
-    │   └── vagrant-kubeadm
-    ├── kubectl-plugins
-    └── observability
+├── kubernetes
+│   ├── ci-cd
+│   │   └── argocd
+│   ├── cluster-creation
+│   │   ├── k3d
+│   │   ├── kind
+│   │   ├── microk8s
+│   │   ├── minikube
+│   │   └── vagrant-kubeadm
+│   ├── kubectl-plugins
+│   └── observability
+└── ml
+    └── openai
 ```
 
 ### Git hooks
