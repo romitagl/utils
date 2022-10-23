@@ -18,8 +18,10 @@ Collection of SW utilities.
 │   │   └── vagrant-kubeadm
 │   ├── kubectl-plugins
 │   └── observability
-└── ml
-    └── openai
+├── ml
+│   └── openai
+└── programming
+    └── python
 ```
 
 ### Git hooks
