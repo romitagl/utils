@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: workflow-template-input-resources
+spec:
+  entrypoint: bash-template
+  arguments:
+    parameters:
+      - name: cpu-limit
+        value: 100m
+      - name: memory
+        value: 100Mi
+  # podSpecPatch: |
+  #   containers:
+  #     - name: main
+  #       resources:
+  #         requests:
+  #           memory: "{{workflow.parameters.memory}}"
+  #         limits:
+  #           memory: "{{workflow.parameters.memory}}"
+  templates:
+    - name: bash-template
+      podSpecPatch: '{"containers":[{"name":"main", "resources":{"limits":{"cpu": "{{workflow.parameters.cpu-limit}}", "memory": "{{workflow.parameters.memory}}" }}}]}'
+      inputs:
+        parameters:
+          - name: memory
+      container:
+        image: bash
+        command: [bash]
+        args: [ "-c", "echo memory: {{inputs.parameters.memory}}"]

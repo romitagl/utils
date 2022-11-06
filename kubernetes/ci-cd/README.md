@@ -4,8 +4,52 @@ This page describes how to configure some CI-CD solutions in Kubernetes.
 
 Currently tested:
 
+- CI:
+  - Argo Workflows
 - CD:
   - Argo CD
+
+## Argo Workflows
+
+Argo Workflows is an open source container-native workflow engine for orchestrating parallel jobs on Kubernetes.
+
+- [Argo Workflows - Website](https://argoproj.github.io/argo-workflows/).
+- [Argo Workflows - Git](https://github.com/argoproj/argo-workflows).
+
+### Install - Quick Start
+
+Official Documentation: <https://argoproj.github.io/argo-workflows/quick-start/>
+
+```bash
+kubectl create namespace argo
+# pick the desired version: https://github.com/argoproj/argo-workflows/releases/
+export ARGO_WORKFLOWS_VERSION=3.4.0
+kubectl apply -n argo -f "https://github.com/argoproj/argo-workflows/releases/download/v${ARGO_WORKFLOWS_VERSION}/install.yaml"
+# patch argo-server authentication
+kubectl patch deployment \
+  argo-server \
+  --namespace argo \
+  --type='json' \
+  -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/args", "value": [
+  "server",
+  "--auth-mode=server",
+  "--access-control-allow-origin=https://localhost:2746",
+  "--insecure-skip-verify=false"
+]}]'
+# port-forward the UI
+kubectl -n argo port-forward deployment/argo-server 2746:2746
+# https://localhost:2746
+```
+
+### Create a WorkflowTemplate
+
+```bash
+# use the default namespace
+# workflow with input parameter
+kubectl create -f ./argo-workflows/template-input-param.yaml
+# workflow with input resources
+kubectl create -f ./argo-workflows/template-input-resources.yaml
+```
 
 ## Argo CD
 
