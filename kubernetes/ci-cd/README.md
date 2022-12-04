@@ -51,6 +51,10 @@ kubectl create -f ./argo-workflows/template-input-param.yaml
 kubectl create -f ./argo-workflows/template-input-resources.yaml
 ```
 
+### Prometheus Integration
+
+Custom Prometheus metrics can be defined to be emitted on a Workflow and Template level basis: <https://argoproj.github.io/argo-workflows/metrics/>.
+
 ## Argo CD
 
 Argo CD is a declarative, GitOps continuous delivery tool for Kubernetes.
