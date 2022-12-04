@@ -12,9 +12,12 @@ There are two common tools for creating Python virtual environments:
 ### venv
 
 ```bash
+# to enable
 export DIR=.venv
 python3 -m venv "$DIR"
 source "$DIR"/bin/activate
+# to disable
+deactivate
 ```
 
 ### virtualenv
