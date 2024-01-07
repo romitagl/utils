@@ -23,8 +23,8 @@ Official Documentation: <https://argoproj.github.io/argo-workflows/quick-start/>
 ```bash
 kubectl create namespace argo
 # pick the desired version: https://github.com/argoproj/argo-workflows/releases/
-export ARGO_WORKFLOWS_VERSION=3.4.0
-kubectl apply -n argo -f "https://github.com/argoproj/argo-workflows/releases/download/v${ARGO_WORKFLOWS_VERSION}/install.yaml"
+export ARGO_WORKFLOWS_VERSION=v3.5.2
+kubectl apply -n argo -f "https://github.com/argoproj/argo-workflows/releases/download/${ARGO_WORKFLOWS_VERSION}/install.yaml"
 # patch argo-server authentication
 kubectl patch deployment \
   argo-server \
@@ -89,7 +89,7 @@ echo $HOST:$PORT
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 ```
 
-### Create an Application
+### Create a custom Application
 
 Official documentation: <https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#app-of-apps>.
 
@@ -109,3 +109,13 @@ kubectl get applications.argoproj.io -A
 # let’s introduce a change! Patch the live manifest to change the color of the box from blue to green:
 kubectl -n bgd patch deploy/bgd --type='json' -p='[{"op": "replace", "path": "/spec/template/spec/containers/0/env/0/value", "value":"green"}]'
 ```
+
+#### Argo Workflows Application
+
+To install Argo Workflows using ArgoCD, the [argo-workflows.yaml](./argo-workflows.yaml) Application can be used:
+
+```bash
+kubectl create -f ./argo-workflows.yaml
+```
+
+**Note** that the `authMode` is set to `server`, which implies no explicit authentication (argo-workflows-server service account is being used).
