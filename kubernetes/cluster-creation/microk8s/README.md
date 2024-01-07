@@ -34,8 +34,8 @@ MicroK8s includes a microk8s kubectl command.
 Create a cluster:
 
 ```bash
-# install k8s 1.24 using a drive of max 10GB
-microk8s install --disk=10 --channel=1.24
+# install k8s 1.29 using a drive of max 30GB
+microk8s install --disk=30 --channel=1.29
 # check the status while Kubernetes starts
 microk8s status --wait-ready
 microk8s kubectl get nodes -o wide
@@ -115,40 +115,7 @@ kubectl get all -n ingress
 
 Please note that the ingress resource should be placed inside the same namespace of the backend resource.
 
-Create the ingress resource to expose Grafana, assuming that the `prometheus` service is enabled:
-
-```bash
-export NAMESPACE=monitoring
-cat <<EOF | kubectl apply -n $NAMESPACE -f -
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress-grafana
-spec:
-  rules:
-  - http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: grafana
-            port:
-              number: 3000
-EOF
-```
-
-**NOTE**: *If you host grafana under subpath* make sure your `grafana.ini` root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
-
-Get the node ip address:
-
-```bash
-kubectl get nodes -o wide
-# NAME          STATUS   ROLES    AGE     VERSION                    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION       CONTAINER-RUNTIME
-# microk8s-vm   Ready    <none>   4h18m   v1.24.0-2+f76e51e86eadea   192.168.64.2   <none>        Ubuntu 18.04.6 LTS   4.15.0-177-generic   containerd://1.5.11
-```
-
-Open the browser and go to <http://192.168.64.2>. Login with username `admin` and password `admin`.
+See Grafana example [here](#ingress-grafana).
 
 ## SSH into cluster nodes
 
@@ -183,3 +150,50 @@ snap.microk8s.daemon-controller-manager
 ```bash
 sudo journalctl -u snap.microk8s.daemon-kubelet -r
 ```
+
+### Observability
+
+To install the observability module:
+
+```bash
+microk8s enable observability
+# check the pods
+kubectl -n observability get pods
+```
+
+#### Ingress-Grafana
+
+Create the ingress resource to expose Grafana:
+
+```bash
+export NAMESPACE=observability
+cat <<EOF | kubectl apply -n $NAMESPACE -f -
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kube-prom-stack-grafana
+            port:
+              number: 80
+EOF
+```
+
+Get the node IP address:
+
+```bash
+kubectl get nodes -o wide
+# NAME          STATUS   ROLES    AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+# microk8s-vm   Ready    <none>   14h   v1.29.0   192.168.64.11   <none>        Ubuntu 22.04.3 LTS   5.15.0-91-generic   containerd://1.6.15
+```
+
+Open the browser and go to <http://192.168.64.11>. Login with username `admin` and password `prom-operator`.
+
+**NOTE**: *If you host grafana under subpath* make sure your `grafana.ini` root_url setting includes subpath. If not using a reverse proxy make sure to set serve_from_sub_path to true.
